@@ -1,0 +1,38 @@
+{
+  "name": "bulls-eye",
+  "version": "1.0.0",
+  "description": "A reactive UI for bull queue management library",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run -s start:src\" \"npm run -s start:ui\"",
+    "start:src": "ts-node-dev --respawn --transpileOnly src",
+    "start:ui": "cd ui && npm start",
+    "build": "rimraf lib && npm run -s build:src && npm run -s build:ui",
+    "build:src": "tsc",
+    "build:ui": "cd ui && npm run -s build",
+    "lint": "tslint -p tsconfig.json"
+  },
+  "keywords": [
+    "bull",
+    "ui",
+    "socket",
+    "reactive",
+    "cli"
+  ],
+  "author": "Abhishek Datta",
+  "license": "ISC",
+  "dependencies": {
+    "static-server": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.1",
+    "concurrently": "^3.6.1",
+    "rimraf": "^3.0.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}
