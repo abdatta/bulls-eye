@@ -126,5 +126,10 @@
   "defaultProject": "bulls-eye-ui",
   "cli": {
     "analytics": "6e67aa3e-0121-4e04-8398-d3ab0bf61e45"
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
   }
 }
