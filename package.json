@@ -4,7 +4,7 @@
   "description": "A reactive UI for bull queue management library",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run -s start:src\" \"npm run -s start:ui\"",
+    "start": "concurrently -r \"npm run -s start:src\" \"npm run -s start:ui\"",
     "start:src": "ts-node-dev --respawn --transpileOnly src",
     "start:ui": "cd ui && npm start",
     "build": "rimraf lib && npm run -s build:src && npm run -s build:ui",
@@ -22,10 +22,18 @@
   "author": "Abhishek Datta",
   "license": "ISC",
   "dependencies": {
+    "bull": "^3.13.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0",
     "static-server": "^2.2.1"
   },
   "devDependencies": {
+    "@types/bull": "^3.12.2",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.6",
     "@types/node": "^13.11.1",
+    "@types/socket.io": "^2.1.4",
     "concurrently": "^3.6.1",
     "rimraf": "^3.0.2",
     "ts-node-dev": "^1.0.0-pre.44",

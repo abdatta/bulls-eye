@@ -1,11 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbButtonModule, NbIconModule, NbMenuModule, NbTabsetModule, NbTreeGridModule, NbTooltipModule, NbProgressBarModule } from '@nebular/theme';
+import {
+  NbThemeModule,
+  NbLayoutModule,
+  NbSidebarModule,
+  NbButtonModule,
+  NbIconModule,
+  NbMenuModule,
+  NbTabsetModule,
+  NbTreeGridModule,
+  NbTooltipModule,
+  NbProgressBarModule,
+  NbSpinnerModule,
+  NbToastrModule
+} from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
@@ -14,7 +30,9 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
+    SocketIoModule.forRoot(config),
     NbThemeModule.forRoot({ name: 'corporate' }),
     NbLayoutModule,
     NbEvaIconsModule,
@@ -25,6 +43,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbTreeGridModule,
     NbTooltipModule,
     NbProgressBarModule,
+    NbSpinnerModule,
+    NbToastrModule.forRoot(),
     NbIconModule
   ],
   providers: [],

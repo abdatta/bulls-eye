@@ -11,12 +11,11 @@
   </nb-sidebar>
 
   <nb-layout-column>
-    <nb-tabset fullWidth>
+    <nb-tabset fullWidth (changeTab)="changeTab($event)">
       <nb-tab *ngFor="let tab of tabs"
               [tabTitle]="tab.title"
               [badgeText]="tab.count"
-              [badgeStatus]="tab.status">
-        <p>List of <strong>{{ tab.title }}</strong>.</p>
+              [badgeStatus]="tab.status" [nbSpinner]="loading">
         <table [nbTreeGrid]="dataSource" [equalColumnsWidth]="false">
 
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
@@ -24,9 +23,9 @@
 
           <ng-container *ngFor="let column of allColumns" [nbTreeGridColumnDef]="column">
             <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{tableHeaders[column]}}</th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbTooltip]="row.data[column]">
+            <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbTooltip]="row.data[column] + (column === 'progress' ? '%' : '')">
               <ng-container *ngIf="column === 'progress'; else elseTemplate">
-                <nb-progress-bar [value]="row.data[column]" status="primary" [displayValue]="true"></nb-progress-bar>  
+                <nb-progress-bar [value]="row.data[column]" [status]="getProgressBarStatus(row.data[column])" [displayValue]="true"></nb-progress-bar>
               </ng-container>
               <ng-template #elseTemplate>
                 {{row.data[column]}}
