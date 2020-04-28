@@ -1,5 +1,5 @@
 {
-  "name": "bulls-eye",
+  "name": "@abdatta/bulls-eye",
   "version": "0.1.0",
   "description": "A reactive UI for bull queue management library",
   "main": "lib/index.js",
@@ -17,6 +17,15 @@
     "version": "git add -A src",
     "postversion": "git push && git push --tags"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "bulls-eye": "lib/index.js"
+  },
+  "files": [
+    "lib/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/abdatta/bulls-eye.git"
@@ -49,11 +58,5 @@
     "ts-node-dev": "^1.0.0-pre.44",
     "tslint": "^6.1.1",
     "typescript": "^3.8.3"
-  },
-  "bin": {
-    "bulls-eye": "lib/index.js"
-  },
-  "files": [
-    "lib/**/*"
-  ]
+  }
 }
