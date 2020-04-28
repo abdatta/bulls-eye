@@ -21,7 +21,7 @@ import {
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: '/', options: {} };
 
 @NgModule({
   declarations: [
