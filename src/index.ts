@@ -1,33 +1,17 @@
-import http from 'http';
-import path from 'path';
-import express from 'express';
-import socketio from 'socket.io';
-import { JobEventsHandler } from './handler';
-import { JobStatus } from 'bull';
+import minimist from 'minimist';
+import fs from 'fs';
 import { config } from 'dotenv';
-
+import { Server } from './server';
 config(); // configuring environment variables
 
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
-const handler = new JobEventsHandler(io);
+const args = minimist(process.argv.slice(2));
 
-app.use(express.static(path.join(__dirname, 'public')));
+if (!args.config) throw new Error('No config file provided. Please provide a config file with the `--config` parameter.');
+if (!fs.existsSync(args.config)) throw new Error('Config file provided not found. Please make sure the path is correct.');
 
-io.on('connection', async client => {
-  console.log('A user connected.');
-  client.on('disconnect', () => console.log('User disconnected.'));
-  handler.broadcastJobCounts(client);
-})
-
-app.get('/api/jobs/:type(completed|waiting|active|delayed|failed|paused)', (req, res) => {
-  const jobType: JobStatus = req.params.type as JobStatus;
-  handler.fetchJobs(jobType)
-    .then(jobs => res.send(jobs))
-    .catch(err => res.status(500).send(err));
-});
-
-server.listen(process.env.HTTP_PORT || 3000, () => {
-  console.log('Server listening to', process.env.HTTP_PORT || 3000);
+Server.start({
+    serverConfig: {
+        port: parseInt(args.port || '3000')
+    },
+    queueConfigs: JSON.parse(fs.readFileSync(args.config, 'utf-8'))
 });

@@ -1,21 +1,12 @@
-import bull, { Queue, JobCounts, JobId, JobStatus } from 'bull';
+import bull, { Queue, JobCounts, JobId, JobStatus, QueueOptions } from 'bull';
 import { Server, Socket } from 'socket.io';
 
-export class JobEventsHandler {
+export class QueueHandler {
     private queue: Queue;
     private progressCache: {[id: string]: number} = {};
 
-    constructor(private io: Server) {
-        if (!process.env.QUEUE_NAME) throw new Error('No queue info present in env');
-
-        this.queue = new bull(process.env.QUEUE_NAME, {
-            redis: {
-                port: parseInt(process.env.REDIS_PORT || '6379'),
-                host: process.env.REDIS_HOST || '127.0.0.1',
-                password: process.env.REDIS_PASS
-            },
-            prefix: process.env.QUEUE_PREFIX
-        });
+    constructor(config: QueueConfig, private io: Server) {
+        this.queue = new bull(config.name, config.options);
         this.setupListeners();
     }
 
@@ -116,4 +107,9 @@ export class JobEventsHandler {
             this.broadcastJobCounts();
         });
     }
+}
+
+export interface QueueConfig {
+    name: string;
+    options: QueueOptions
 }

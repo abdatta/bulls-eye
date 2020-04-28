@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently -r \"npm run -s start:src\" \"npm run -s start:ui\"",
-    "start:src": "ts-node-dev --respawn --transpileOnly src",
+    "start:src": "ts-node-dev --respawn --transpileOnly src -- --config \".conf.json\"",
     "start:ui": "cd ui && npm start",
     "build": "rimraf lib && npm run -s build:src && npm run -s build:ui",
     "build:src": "tsc",
@@ -25,12 +25,14 @@
     "bull": "^3.13.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "minimist": "^1.2.5",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "@types/bull": "^3.12.2",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.6",
+    "@types/minimist": "^1.2.0",
     "@types/node": "^13.11.1",
     "@types/socket.io": "^2.1.4",
     "concurrently": "^3.6.1",
