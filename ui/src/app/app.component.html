@@ -18,17 +18,25 @@
               [badgeStatus]="tab.status" [nbSpinner]="loading">
         <table [nbTreeGrid]="dataSource" [equalColumnsWidth]="false">
 
-          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-          <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="shownTableHeaderKeys"></tr>
+          <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: shownTableHeaderKeys"></tr>
 
-          <ng-container *ngFor="let column of allColumns" [nbTreeGridColumnDef]="column">
-            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{tableHeaders[column]}}</th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbTooltip]="row.data[column] + (column === 'progress' ? '%' : '')">
-              <ng-container *ngIf="column === 'progress'; else elseTemplate">
+          <ng-container *ngFor="let column of shownTableHeaderKeys" [nbTreeGridColumnDef]="column">
+            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+              <span *ngIf="column !== 'more'">{{tableHeaders[column]}}</span>
+              <button nbButton ghost status="default" *ngIf="column === 'more'" [nbContextMenu]="hiddenTableHeaderKeys" nbContextMenuTag="more-menu"><nb-icon icon="more-vertical"></nb-icon></button>
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbTooltip]="column !== 'more' ? row.data[column] + (column === 'progress' ? '%' : '') : 'Show More'">
+              <ng-container *ngIf="column === 'progress'; else notProgress">
                 <nb-progress-bar [value]="row.data[column]" [status]="getProgressBarStatus(row.data[column])" [displayValue]="true"></nb-progress-bar>
               </ng-container>
-              <ng-template #elseTemplate>
-                {{row.data[column]}}
+              <ng-template #notProgress>
+                <ng-container *ngIf="column === 'more'; else notMore">
+                  <button nbButton ghost><nb-icon icon="external-link"></nb-icon></button>
+                </ng-container>
+                <ng-template #notMore>
+                  {{row.data[column]}}
+                </ng-template>
               </ng-template>
             </td>
           </ng-container>

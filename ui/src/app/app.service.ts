@@ -20,7 +20,7 @@ export class AppService {
   }
 
   getJobs(type: string) {
-    return this.http.get<any[]>('/api/jobs/' + type);
+    return this.http.get<Job[]>('/api/jobs/' + type);
   }
 
   getProgress() {
@@ -35,3 +35,18 @@ export interface JobCounts {
   failed: number;
   delayed: number;
 }
+
+export interface Job {
+  id: string;
+  name: string;
+  progress: number;
+  timestamp: string;
+  attemptsMade: number;
+  data: {[k: string]: any};
+  delay: number;
+  finishedOn: number;
+  processedOn: number;
+  returnvalue: any;
+  stacktrace: string[];
+}
+

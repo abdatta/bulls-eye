@@ -1,8 +1,14 @@
 
 table {
     text-align: center;
+    width: 100%;
 }
-
+th.nb-header-cell.nb-column-more, td.nb-cell.nb-column-more {
+    width: 10%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
 td.nb-tree-grid-cell.nb-cell {
     white-space: nowrap;
     text-overflow: ellipsis;

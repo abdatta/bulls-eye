@@ -16,7 +16,8 @@ import {
   NbTooltipModule,
   NbProgressBarModule,
   NbSpinnerModule,
-  NbToastrModule
+  NbToastrModule,
+  NbContextMenuModule
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -41,6 +42,7 @@ const config: SocketIoConfig = { url: '/', options: {} };
     NbMenuModule.forRoot(),
     NbTabsetModule,
     NbTreeGridModule,
+    NbContextMenuModule,
     NbTooltipModule,
     NbProgressBarModule,
     NbSpinnerModule,

@@ -6,9 +6,11 @@ import {
   NbTreeGridDataSourceBuilder,
   NbToastrService,
   NbComponentStatus,
-  NbGlobalPosition
+  NbGlobalPosition,
+  NbMenuService
 } from '@nebular/theme';
-import { AppService } from './app.service';
+import { AppService, Job } from './app.service';
+import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 
 @Component({
@@ -73,30 +75,55 @@ export class AppComponent {
 
   activeTab = 'waiting';
 
-  dataSource: NbTreeGridDataSource<TableEntry>;
+  dataSource: NbTreeGridDataSource<Job>;
 
-  private data: TableEntry[] = [];
+  private data: Job[] = [];
 
-  allColumns: (keyof TableEntry)[] = ['id', 'name', 'progress', 'timestamp', 'attempts'];
-
-  tableHeaders: {[k in keyof TableEntry]: string} = {
+  tableHeaders: {[k in keyof Job]?: string} = {
     id: 'ID',
     name: 'Name',
     progress: 'Progress',
     timestamp: 'Timestamp',
-    attempts: 'Attempts Made'
+    attemptsMade: 'Attempts Made',
+    delay: 'Delay',
+    finishedOn: 'Finished On',
+    processedOn: 'Processed On',
+    returnvalue: 'Return Value'
   };
+
+  shownTableHeaderKeys: (keyof Job | 'more')[] = ['id', 'name', 'progress', 'timestamp', 'more'];
+  hiddenTableHeaderKeys = Object.keys(this.tableHeaders)
+                                .filter((headerKey: keyof Job) => headerKey !== 'id')
+                                .map((headerKey: keyof Job) => ({
+                                  title: this.tableHeaders[headerKey],
+                                  selected: this.shownTableHeaderKeys.includes(headerKey),
+                                  data: headerKey
+                                }));
 
   loading: boolean;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<TableEntry>,
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<Job>,
               private sidebarService: NbSidebarService,
               private toastrService: NbToastrService,
+              private nbMenuService: NbMenuService,
               private service: AppService) {
       this.dataSource = dataSourceBuilder.create<TableNode>(this.data.map(data => ({ data, expanded: false })));
       this.updateJobCounts();
       this.fetchJobs();
       this.updateProgress();
+      this.nbMenuService.onItemClick()
+      .pipe(
+        filter(({ tag }) => tag === 'more-menu'),
+        map(({ item }) => item),
+      )
+      .subscribe((item: NbMenuItem) => {
+        item.selected = !item.selected;
+        if (item.selected) {
+          this.shownTableHeaderKeys = [...this.shownTableHeaderKeys.slice(0, -1), item.data, 'more'];
+        } else {
+          this.shownTableHeaderKeys = this.shownTableHeaderKeys.filter(h => h !== item.data);
+        }
+      });
   }
 
   toggleSidebar() {
@@ -169,13 +196,7 @@ export class AppComponent {
     this.loading = true;
     this.service.getJobs(this.activeTab.toLowerCase())
       .subscribe(jobs => {
-        this.data = jobs.map(job => ({
-          id: job.id,
-          name: job.name,
-          progress: job.progress,
-          timestamp: moment(job.timestamp).format('lll'),
-          attempts: job.attemptsMade
-        }));
+        this.data = jobs;
         this.dataSource = this.dataSourceBuilder.create<TableNode>(this.data.map(data => ({ data, expanded: false })));
         this.loading = false;
       });
@@ -209,15 +230,7 @@ export class AppComponent {
   }
 }
 
-interface TableEntry {
-  id: string;
-  name: string;
-  progress: number;
-  timestamp: string;
-  attempts: number;
-}
-
 interface TableNode {
-  data: TableEntry;
+  data: Job;
   expanded: boolean;
 }
