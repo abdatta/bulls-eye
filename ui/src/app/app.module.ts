@@ -22,6 +22,7 @@ import {
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { NgxLocalStorageModule } from 'ngx-localstorage';
 
 const config: SocketIoConfig = { url: '/', options: {} };
 
@@ -49,7 +50,8 @@ const config: SocketIoConfig = { url: '/', options: {} };
     NbProgressBarModule,
     NbSpinnerModule,
     NbToastrModule.forRoot(),
-    NbIconModule
+    NbIconModule,
+    NgxLocalStorageModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

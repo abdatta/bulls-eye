@@ -11,6 +11,7 @@ import {
 } from '@nebular/theme';
 import { AppService, Job } from './app.service';
 import { filter, map } from 'rxjs/operators';
+import { ngxLocalStorage } from 'ngx-localstorage';
 
 @Component({
   selector: 'be-root',
@@ -90,7 +91,8 @@ export class AppComponent {
     returnvalue: 'Return Value'
   };
 
-  shownTableHeaderKeys: (keyof Job | 'more')[] = ['id', 'name', 'progress', 'timestamp', 'more'];
+  @ngxLocalStorage({ nullTransformer: () => ['id', 'name', 'progress', 'timestamp', 'more']})
+  shownTableHeaderKeys: (keyof Job | 'more')[];
   hiddenTableHeaderKeys = Object.keys(this.tableHeaders)
                                 .filter((headerKey: keyof Job) => headerKey !== 'id')
                                 .map((headerKey: keyof Job) => ({
@@ -183,7 +185,7 @@ export class AppComponent {
     const audio = new Audio();
     audio.src = '../assets/notif.mp3';
     audio.load();
-    audio.play();
+    audio.play().catch(() => console.log('Failed to play audio.'));
   }
 
   changeTab(tab) {
