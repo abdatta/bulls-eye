@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { MomentModule } from 'ngx-moment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   NbThemeModule,
@@ -34,6 +35,7 @@ const config: SocketIoConfig = { url: '/', options: {} };
     HttpClientModule,
     BrowserAnimationsModule,
     SocketIoModule.forRoot(config),
+    MomentModule,
     NbThemeModule.forRoot({ name: 'corporate' }),
     NbLayoutModule,
     NbEvaIconsModule,

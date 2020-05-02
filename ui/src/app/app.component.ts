@@ -11,7 +11,6 @@ import {
 } from '@nebular/theme';
 import { AppService, Job } from './app.service';
 import { filter, map } from 'rxjs/operators';
-import * as moment from 'moment';
 
 @Component({
   selector: 'be-root',

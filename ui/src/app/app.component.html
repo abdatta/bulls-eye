@@ -35,7 +35,12 @@
                   <button nbButton ghost><nb-icon icon="external-link"></nb-icon></button>
                 </ng-container>
                 <ng-template #notMore>
-                  {{row.data[column]}}
+                  <ng-container *ngIf="column === 'timestamp' || column === 'finishedOn' || column === 'processedOn'; else notDate">
+                    {{row.data[column] | amDateFormat:'lll'}}
+                  </ng-container>
+                  <ng-template #notDate>
+                    {{row.data[column]}}
+                  </ng-template>
                 </ng-template>
               </ng-template>
             </td>
