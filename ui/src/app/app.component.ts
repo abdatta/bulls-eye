@@ -150,6 +150,14 @@ export class AppComponent {
       status: toastrStatus,
       position: 'bottom-left' as NbGlobalPosition
     });
+    this.playAudio();
+  }
+
+  playAudio(){
+    const audio = new Audio();
+    audio.src = '../assets/notif.mp3';
+    audio.load();
+    audio.play();
   }
 
   changeTab(tab) {
