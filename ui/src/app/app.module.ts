@@ -15,7 +15,6 @@ import {
   NbTabsetModule,
   NbTreeGridModule,
   NbTooltipModule,
-  NbProgressBarModule,
   NbSpinnerModule,
   NbToastrModule,
   NbContextMenuModule
@@ -23,12 +22,14 @@ import {
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { NgxLocalStorageModule } from 'ngx-localstorage';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
 const config: SocketIoConfig = { url: '/', options: {} };
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +48,6 @@ const config: SocketIoConfig = { url: '/', options: {} };
     NbTreeGridModule,
     NbContextMenuModule,
     NbTooltipModule,
-    NbProgressBarModule,
     NbSpinnerModule,
     NbToastrModule.forRoot(),
     NbIconModule,

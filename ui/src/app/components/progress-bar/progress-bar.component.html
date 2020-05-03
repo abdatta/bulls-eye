@@ -1,0 +1,6 @@
+<div class="progress-container" [ngClass]="'size-' + size + ' status-' + status">
+    <div class="progress-value" [style.width.%]="value">
+        <div [style.width.%]="10000/value">{{value}}%</div>
+    </div>
+    <span>{{value}}%</span>
+</div>

@@ -1,0 +1,60 @@
+@import '~@nebular/theme/styles/theming';
+@import '~@nebular/theme/styles/themes/default';
+
+.progress-container {
+    position: relative;
+    text-align: center;
+    border-radius: nb-theme(progress-bar-border-radius);
+    font-family: nb-theme(progress-bar-text-font-family);
+    overflow: hidden;
+
+    span {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+}
+.progress-value {
+    position: absolute;
+    overflow: hidden;
+    font-family: nb-theme(progress-bar-text-font-family);
+    transition-duration: nb-theme(progress-bar-animation-duration);
+    transition-property: width, background-color;
+    height: 100%;
+
+    div {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+}
+
+@each $size in nb-get-sizes() {
+
+  .size-#{$size}.progress-container {
+    height: nb-theme(progress-bar-#{$size}-height);
+    font-size: nb-theme(progress-bar-#{$size}-text-font-size);
+    font-weight: nb-theme(progress-bar-#{$size}-text-font-weight);
+    line-height: nb-theme(progress-bar-#{$size}-text-line-height);
+  }
+  .size-#{$size} > .progress-value {
+    font-size: nb-theme(progress-bar-#{$size}-text-font-size);
+    font-weight: nb-theme(progress-bar-#{$size}-text-font-weight);
+    line-height: nb-theme(progress-bar-#{$size}-text-line-height);
+  }
+
+}
+
+@each $status in nb-get-statuses() {
+
+  .status-#{$status}.progress-container {
+    background-color: nb-theme(progress-bar-#{$status}-background-color);
+    color: nb-theme(progress-bar-#{$status}-filled-background-color);
+  }
+  .status-#{$status} > .progress-value {
+    color: nb-theme(progress-bar-#{$status}-text-color);
+    background: nb-theme(progress-bar-#{$status}-filled-background-color);
+  }
+}
