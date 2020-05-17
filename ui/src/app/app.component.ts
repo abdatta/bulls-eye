@@ -102,6 +102,9 @@ export class AppComponent {
                                 }));
 
   loading: boolean;
+  pageNumber = 1;
+  totalPages = 1;
+  readonly PAGE_SIZE = 15;
 
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<Job>,
               private sidebarService: NbSidebarService,
@@ -190,14 +193,21 @@ export class AppComponent {
 
   changeTab(tab) {
     this.activeTab = tab.tabTitle;
+    this.pageNumber = 1;
     this.fetchJobs();
   }
 
-  fetchJobs() {
+  fetchJobs(page = this.pageNumber) {
     this.loading = true;
-    this.service.getJobs(this.activeTab.toLowerCase())
+    this.service.getJobs(this.activeTab.toLowerCase(), this.PAGE_SIZE * (page - 1), this.PAGE_SIZE * page)
       .subscribe(jobs => {
         this.data = jobs;
+        this.pageNumber = page;
+        this.tabs.forEach(tab => {
+          if (tab.title === this.activeTab) {
+            this.totalPages = Math.ceil(tab.count / this.PAGE_SIZE) || 1;
+          }
+        });
         this.dataSource = this.dataSourceBuilder.create<TableNode>(this.data.map(data => ({ data, expanded: false })));
         this.loading = false;
       });

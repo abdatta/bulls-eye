@@ -47,6 +47,15 @@
           </ng-container>
 
         </table>
+        <div class="paginator">
+          <button nbButton status="control" [disabled]="pageNumber <= 1" (click)="fetchJobs(pageNumber - 1)"><nb-icon icon="arrow-left-outline"></nb-icon></button>
+          <button nbButton *ngIf="pageNumber > 1" (click)="fetchJobs(1)">1</button>
+          <button nbButton *ngIf="pageNumber > 2" disabled class="ellipses"><nb-icon icon="more-horizontal-outline"></nb-icon></button>
+          <button nbButton disabled class="current-page">{{ pageNumber }}</button>
+          <button nbButton *ngIf="pageNumber < totalPages - 1" disabled class="ellipses"><nb-icon icon="more-horizontal-outline"></nb-icon></button>
+          <button nbButton *ngIf="pageNumber < totalPages" (click)="fetchJobs(totalPages)">{{ totalPages }}</button>
+          <button nbButton status="control" [disabled]="pageNumber >= totalPages" (click)="fetchJobs(pageNumber + 1)"><nb-icon icon="arrow-right-outline"></nb-icon></button>
+        </div>
       </nb-tab>
     </nb-tabset>
   </nb-layout-column>

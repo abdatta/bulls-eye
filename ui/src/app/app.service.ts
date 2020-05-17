@@ -19,8 +19,14 @@ export class AppService {
     return this.socket.fromEvent<JobCounts>('job-counts');
   }
 
-  getJobs(type: string) {
-    return this.http.get<Job[]>('/api/jobs/' + type);
+  getJobs(type: string, start: number, end: number) {
+    console.log(`getJobs(${type}, ${start}, ${end})`);
+    return this.http.get<Job[]>('/api/jobs/' + type, {
+      params: {
+        start: start.toString(),
+        end: end.toString()
+      }
+    });
   }
 
   getProgress() {

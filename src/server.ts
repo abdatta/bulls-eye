@@ -22,7 +22,9 @@ export class Server {
 
     app.get('/api/jobs/:type(completed|waiting|active|delayed|failed|paused)', (req, res) => {
       const jobType: JobStatus = req.params.type as JobStatus;
-      handler.fetchJobs(jobType)
+      const start: number = parseInt(req.query.start as string);
+      const end: number = parseInt(req.query.end as string);
+      handler.fetchJobs(jobType, start, end - 1)
         .then(jobs => res.send(jobs))
         .catch(err => res.status(500).send(err));
     });

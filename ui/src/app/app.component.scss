@@ -13,3 +13,27 @@ td.nb-tree-grid-cell.nb-cell {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.paginator {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+
+    button {
+        margin: 0.375rem;
+    }
+
+    button[disabled] {
+        border: none;
+    }
+
+    .current-page {
+        color: inherit !important;
+        background-color: inherit !important;
+        border: solid #222b45 1px !important;
+    }
+
+    .ellipses {
+        color: inherit !important;
+        background-color: inherit !important;
+    }
+}

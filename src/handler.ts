@@ -21,9 +21,9 @@ export class QueueHandler {
             .catch(err => console.log(err));
     }
 
-    fetchJobs(jobType: JobStatus) {
-        console.log(`fetching ${jobType} jobs.`)
-        return this.queue.getJobs([jobType], undefined, undefined, jobType === 'waiting');
+    fetchJobs(jobType: JobStatus, start?: number, end?: number) {
+        console.log(`fetching ${jobType} jobs with start=${start} and end=${end}`)
+        return this.queue.getJobs([jobType], start, end, jobType === 'waiting');
     }
 
     broadcastProgress(jobId: string, progress: number) {
