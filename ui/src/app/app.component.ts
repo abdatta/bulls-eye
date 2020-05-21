@@ -73,11 +73,12 @@ export class AppComponent {
     }
   ];
 
-  activeTab = 'waiting';
+  // TODO: Currently, this updates only after job fetch was successful. This should not be the case. Make a separate variable if required.
+  activeTab = 'Waiting';
 
   dataSource: NbTreeGridDataSource<Job>;
 
-  private data: Job[] = [];
+  data: Job[] = [];
 
   tableHeaders: {[k in keyof Job]?: string} = {
     id: 'ID',
@@ -113,7 +114,7 @@ export class AppComponent {
               private service: AppService) {
       this.dataSource = dataSourceBuilder.create<TableNode>(this.data.map(data => ({ data, expanded: false })));
       this.updateJobCounts();
-      this.fetchJobs();
+      this.fetchJobs(this.activeTab);
       this.updateProgress();
       this.nbMenuService.onItemClick()
       .pipe(
@@ -144,7 +145,7 @@ export class AppComponent {
           }
           tab.count = data[jobType];
         });
-        this.fetchJobs();
+        this.fetchJobs(this.activeTab);
       });
   }
 
@@ -191,24 +192,19 @@ export class AppComponent {
     audio.play().catch(() => console.log('Failed to play audio.'));
   }
 
-  changeTab(tab) {
-    this.activeTab = tab.tabTitle;
-    this.pageNumber = 1;
-    this.fetchJobs();
-  }
-
-  fetchJobs(page = this.pageNumber) {
+  fetchJobs(type: string, page = this.pageNumber) {
     this.loading = true;
-    this.service.getJobs(this.activeTab.toLowerCase(), this.PAGE_SIZE * (page - 1), this.PAGE_SIZE * page)
+    this.service.getJobs(type.toLowerCase(), this.PAGE_SIZE * (page - 1), this.PAGE_SIZE * page)
       .subscribe(jobs => {
         this.data = jobs;
         this.pageNumber = page;
         this.tabs.forEach(tab => {
-          if (tab.title === this.activeTab) {
+          if (tab.title === type) {
             this.totalPages = Math.ceil(tab.count / this.PAGE_SIZE) || 1;
           }
         });
         this.dataSource = this.dataSourceBuilder.create<TableNode>(this.data.map(data => ({ data, expanded: false })));
+        this.activeTab = type;
         this.loading = false;
       });
   }

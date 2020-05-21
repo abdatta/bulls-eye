@@ -20,7 +20,6 @@ export class AppService {
   }
 
   getJobs(type: string, start: number, end: number) {
-    console.log(`getJobs(${type}, ${start}, ${end})`);
     return this.http.get<Job[]>('/api/jobs/' + type, {
       params: {
         start: start.toString(),

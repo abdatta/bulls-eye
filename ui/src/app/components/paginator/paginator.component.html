@@ -1,0 +1,12 @@
+<div class="paginator" *ngIf="pageButtons && pageButtons.length">
+    <button nbButton status="control" [disabled]="currentPage <= 1" (click)="toPage.emit(currentPage - 1)"><nb-icon icon="arrow-left-outline"></nb-icon></button>
+    <ng-container *ngFor="let page of pageButtons">
+        <ng-container *ngIf="page.type === 'page'; else ellipsis">
+            <button nbButton [disabled]="currentPage === page.value" [class.current-page]="currentPage === page.value" (click)="toPage.emit(page.value)">{{ page.value }}</button>
+        </ng-container>
+        <ng-template #ellipsis>
+            <button nbButton disabled class="ellipses"><nb-icon icon="more-horizontal-outline"></nb-icon></button>
+        </ng-template>
+    </ng-container>
+    <button nbButton status="control" [disabled]="currentPage >= totalPages" (click)="toPage.emit(currentPage + 1)"><nb-icon icon="arrow-right-outline"></nb-icon></button>
+</div>

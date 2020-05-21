@@ -23,13 +23,15 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { NgxLocalStorageModule } from 'ngx-localstorage';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 const config: SocketIoConfig = { url: '/', options: {} };
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,

@@ -11,7 +11,7 @@
   </nb-sidebar>
 
   <nb-layout-column>
-    <nb-tabset fullWidth (changeTab)="changeTab($event)">
+    <nb-tabset fullWidth (changeTab)="fetchJobs($event.tabTitle, 1)">
       <nb-tab *ngFor="let tab of tabs"
               [tabTitle]="tab.title"
               [badgeText]="tab.count"
@@ -45,17 +45,9 @@
               </ng-template>
             </td>
           </ng-container>
-
         </table>
-        <div class="paginator">
-          <button nbButton status="control" [disabled]="pageNumber <= 1" (click)="fetchJobs(pageNumber - 1)"><nb-icon icon="arrow-left-outline"></nb-icon></button>
-          <button nbButton *ngIf="pageNumber > 1" (click)="fetchJobs(1)">1</button>
-          <button nbButton *ngIf="pageNumber > 2" disabled class="ellipses"><nb-icon icon="more-horizontal-outline"></nb-icon></button>
-          <button nbButton disabled class="current-page">{{ pageNumber }}</button>
-          <button nbButton *ngIf="pageNumber < totalPages - 1" disabled class="ellipses"><nb-icon icon="more-horizontal-outline"></nb-icon></button>
-          <button nbButton *ngIf="pageNumber < totalPages" (click)="fetchJobs(totalPages)">{{ totalPages }}</button>
-          <button nbButton status="control" [disabled]="pageNumber >= totalPages" (click)="fetchJobs(pageNumber + 1)"><nb-icon icon="arrow-right-outline"></nb-icon></button>
-        </div>
+        <div *ngIf="data && !data.length" class="no-jobs">There are no {{ activeTab | lowercase }} jobs.</div>
+        <be-paginator [currentPage]="pageNumber" [totalPages]="totalPages" (toPage)="fetchJobs(activeTab, $event)"></be-paginator>
       </nb-tab>
     </nb-tabset>
   </nb-layout-column>
