@@ -26,7 +26,14 @@
               <span *ngIf="column !== 'more'">{{tableHeaders[column]}}</span>
               <button nbButton ghost status="default" *ngIf="column === 'more'" [nbContextMenu]="hiddenTableHeaderKeys" nbContextMenuTag="more-menu"><nb-icon icon="more-vertical"></nb-icon></button>
             </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbTooltip]="column !== 'more' ? row.data[column] + (column === 'progress' ? '%' : '') : 'Show More'">
+            <td nbTreeGridCell *nbTreeGridCellDef="let row"
+                [nbTooltip]="column === 'more' ? 'Show More' :
+                             column === 'delay' ? (row.data[column] | number) :
+                             column === 'progress' ? row.data[column] + '%' :
+                             column === 'timestamp' ? (row.data[column] | amDateFormat:'lll') :
+                             column === 'finishedOn' ? (row.data[column] | amDateFormat:'lll') :
+                             column === 'processedOn' ? (row.data[column] | amDateFormat:'lll') :
+                             column === 'attemptsMade' ? (row.data[column] | number) : row.data[column]">
               <ng-container *ngIf="column === 'progress'; else notProgress">
                 <be-progress-bar [value]="row.data[column]" [status]="getProgressBarStatus(row.data[column])"></be-progress-bar>
               </ng-container>
