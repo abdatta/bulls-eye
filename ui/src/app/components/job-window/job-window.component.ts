@@ -5,7 +5,7 @@ import { AppService, Job } from 'src/app/app.service';
 @Component({
   selector: 'be-job-window',
   templateUrl: './job-window.component.html',
-  styleUrls: ['./job-window.component.css']
+  styleUrls: ['./job-window.component.scss']
 })
 export class JobWindowComponent implements OnInit {
 
@@ -13,7 +13,6 @@ export class JobWindowComponent implements OnInit {
 
   constructor(public windowRef: NbWindowRef,
               private appService: AppService) {
-              windowRef.stateChange.subscribe(state => console.log(windowRef.state));
   }
 
   ngOnInit(): void {
@@ -24,12 +23,20 @@ export class JobWindowComponent implements OnInit {
       });
   }
 
-  minimize() {
-    this.windowRef.minimize();
-  }
-
-  close() {
-    this.windowRef.close();
+  getProgressBarStatus(progress: number) {
+    if (progress === 0) {
+      return 'basic';
+    }
+    if (progress < 10) {
+      return 'danger';
+    }
+    if (progress < 90) {
+      return 'warning';
+    }
+    if (progress < 100) {
+      return 'info';
+    }
+    return 'success';
   }
 
 }

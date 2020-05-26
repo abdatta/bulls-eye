@@ -1,25 +1,78 @@
 <div *ngIf="job" class="job-container">
-    <div><b>ID</b> {{ job.id }}</div>
-    <div><b>Name</b>: {{ job.name }}</div>
-    <div><b>Timestamp</b>: {{ job.timestamp | amDateFormat:'lll' }}</div>
-    <div><b>Finished On</b>: {{ job.finishedOn | amDateFormat:'lll' }}</div>
-    <div><b>Processed On</b>: {{ job.processedOn | amDateFormat:'lll' }}</div>
-    <div><b>Attempts Made</b>: {{ job.attemptsMade | number }}</div>
-    <div><b>Delay</b>: {{ job.delay }}</div>
-    <div><b>Progress</b>: {{ job.progress }}%</div>
-    <div *ngIf="job.returnvalue != null"><b>Return Value</b>: {{ job.returnvalue }}</div>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>{{ job.id }}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{ job.name }}</td>
+        </tr>
+        <tr>
+            <td>Timestamp</td>
+            <td>{{ job.timestamp | amDateFormat:'lll' }}</td>
+        </tr>
+        <tr *ngIf="job.finishedOn">
+            <td>Finished On</td>
+            <td>{{ job.finishedOn | amDateFormat:'lll' }}</td>
+        </tr>
+        <tr *ngIf="job.processedOn">
+            <td>Processed On</td>
+            <td>{{ job.processedOn | amDateFormat:'lll' }}</td>
+        </tr>
+        <tr>
+            <td>Attempts Made</td>
+            <td>{{ job.attemptsMade | number }}</td>
+        </tr>
+        <tr>
+            <td>Delay</td>
+            <td>{{ job.delay }}</td>
+        </tr>
+        <tr *ngIf="job.progress">
+            <td>Progress</td>
+            <td><be-progress-bar [value]="job.progress" [status]="getProgressBarStatus(job.progress)"></be-progress-bar></td>
+        </tr>
+        <tr *ngIf="job.returnvalue != null">
+            <td>Return Value</td>
+            <td>{{ job.returnvalue }}</td>
+        </tr>
+    </table>
     <ng-container *ngIf="windowRef.state === 'full-screen'">
-        <nb-card accent="info">
+        <nb-card status="default">
             <nb-card-header>Data</nb-card-header>
-            <nb-card-body style="white-space: pre-wrap;">
-                {{ job.data | json }}
+            <nb-card-body>
+                <code>{{ job.data | json }}</code>
             </nb-card-body>
         </nb-card>
-        <div><b>Opts</b>:</div>
-        <div style="white-space: pre-wrap;">{{ job.opts | json }}</div>
-        <div><b>Failed Reason</b>:</div>
-        <div style="white-space: pre-wrap;">{{ job.failedReason }}</div>
-        <div><b>Stack Trace</b>:</div>
-        <div style="white-space: pre-wrap;">{{ job.stacktrace | json }}</div>
+        <nb-card status="info">
+            <nb-card-header>Opts</nb-card-header>
+            <nb-card-body>
+                <code>{{ job.opts | json }}</code>
+            </nb-card-body>
+        </nb-card>
+        <nb-card status="success" *ngIf="job.logs?.logs?.length">
+            <nb-card-header>Logs</nb-card-header>
+            <nb-card-body>
+                <code *ngFor="let log of job.logs.logs; last as isLast">
+                    {{ log }}
+                    <div *ngIf="!isLast"></div>
+                </code>
+            </nb-card-body>
+        </nb-card>
+        <nb-card status="danger" *ngIf="job.failedReason">
+            <nb-card-header>Failed Reason</nb-card-header>
+            <nb-card-body>
+                <code>{{ job.failedReason }}</code>
+            </nb-card-body>
+        </nb-card>
+        <nb-card status="warning" *ngIf="job.stacktrace?.length">
+            <nb-card-header>Stack Trace</nb-card-header>
+            <nb-card-body>
+                <code *ngFor="let trace of job.stacktrace; last as isLast">
+                    {{ trace }}
+                    <div *ngIf="!isLast"></div>
+                </code>
+            </nb-card-body>
+        </nb-card>
     </ng-container>
 </div>

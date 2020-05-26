@@ -246,7 +246,7 @@ export class AppComponent {
   openJobWindow(i: number) {
     const job = this.data[i];
     const jobWindowRef = this.windowService.open(JobWindowComponent, {
-      title: this.shownTableHeaderKeys.includes('name') ? job.id : job.name,
+      title: `${job.id} ${job.name}`,
       windowClass: 'job-container',
       context: job.id
     });

@@ -59,5 +59,9 @@ export interface Job {
   returnvalue?: any;
   failedReason?: string;
   stacktrace?: string[];
+  logs?: {
+    logs: string[];
+    count: number;
+  };
 }
 
