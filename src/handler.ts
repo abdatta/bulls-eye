@@ -21,9 +21,10 @@ export class QueueHandler {
             .catch(err => console.log(err));
     }
 
-    fetchJob(jobId: string) {
+    async fetchJob(jobId: string) {
         console.log(`fetching job with jobId:${jobId}`);
-        return this.queue.getJob(jobId);
+        const [job, logs] = await Promise.all([this.queue.getJob(jobId), this.queue.getJobLogs(jobId)]);
+        return {...job, progress: job?.progress(), logs};
     }
 
     fetchJobs(jobType: JobStatus, start?: number, end?: number) {
@@ -63,6 +64,7 @@ export class QueueHandler {
             // A job has been marked as stalled. This is useful for debugging job
             // workers that crash or pause the event loop.
             console.log('Triggered event: global:stalled');
+            this.broadcastJobCounts();
         })
 
         this.queue.on('global:progress', (jobId, progress) => {
@@ -104,6 +106,7 @@ export class QueueHandler {
         this.queue.on('global:drained', () => {
             // Emitted every time the queue has processed all the waiting jobs (even if there can be some delayed jobs not yet processed)
             console.log('Triggered event: global:drained');
+            this.broadcastJobCounts();
         });
 
         this.queue.on('global:removed', (job) => {
