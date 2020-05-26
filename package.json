@@ -1,6 +1,6 @@
 {
   "name": "@abdatta/bulls-eye",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A reactive UI for bull queue management library",
   "main": "lib/index.js",
   "scripts": {
