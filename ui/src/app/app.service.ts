@@ -19,7 +19,7 @@ export class AppService {
     return this.socket.fromEvent<JobCounts>('job-counts');
   }
 
-  getJobs(type: string, start: number, end: number) {
+  getJobs(type: string, start: number, end: number): Observable<Job[]> {
     return this.http.get<Job[]>('/api/jobs/' + type, {
       params: {
         start: start.toString(),
@@ -28,7 +28,11 @@ export class AppService {
     });
   }
 
-  getProgress() {
+  getJob(jobId: string): Observable<Job> {
+    return this.http.get<Job>('/api/job/' + jobId);
+  }
+
+  getProgress(): Observable<{id: string, progress: number}> {
     return this.socket.fromEvent<{id: string, progress: number}>('progress');
   }
 }
@@ -48,10 +52,12 @@ export interface Job {
   timestamp: string;
   attemptsMade: number;
   data: {[k: string]: any};
+  opts?: {[k: string]: any};
   delay: number;
-  finishedOn: number;
-  processedOn: number;
-  returnvalue: any;
-  stacktrace: string[];
+  finishedOn?: number;
+  processedOn?: number;
+  returnvalue?: any;
+  failedReason?: string;
+  stacktrace?: string[];
 }
 

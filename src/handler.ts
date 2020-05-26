@@ -21,6 +21,11 @@ export class QueueHandler {
             .catch(err => console.log(err));
     }
 
+    fetchJob(jobId: string) {
+        console.log(`fetching job with jobId:${jobId}`);
+        return this.queue.getJob(jobId);
+    }
+
     fetchJobs(jobType: JobStatus, start?: number, end?: number) {
         console.log(`fetching ${jobType} jobs with start=${start} and end=${end}`)
         return this.queue.getJobs([jobType], start, end, jobType === 'waiting');

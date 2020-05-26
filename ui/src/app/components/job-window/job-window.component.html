@@ -1,0 +1,25 @@
+<div *ngIf="job" class="job-container">
+    <div><b>ID</b> {{ job.id }}</div>
+    <div><b>Name</b>: {{ job.name }}</div>
+    <div><b>Timestamp</b>: {{ job.timestamp | amDateFormat:'lll' }}</div>
+    <div><b>Finished On</b>: {{ job.finishedOn | amDateFormat:'lll' }}</div>
+    <div><b>Processed On</b>: {{ job.processedOn | amDateFormat:'lll' }}</div>
+    <div><b>Attempts Made</b>: {{ job.attemptsMade | number }}</div>
+    <div><b>Delay</b>: {{ job.delay }}</div>
+    <div><b>Progress</b>: {{ job.progress }}%</div>
+    <div *ngIf="job.returnvalue != null"><b>Return Value</b>: {{ job.returnvalue }}</div>
+    <ng-container *ngIf="windowRef.state === 'full-screen'">
+        <nb-card accent="info">
+            <nb-card-header>Data</nb-card-header>
+            <nb-card-body style="white-space: pre-wrap;">
+                {{ job.data | json }}
+            </nb-card-body>
+        </nb-card>
+        <div><b>Opts</b>:</div>
+        <div style="white-space: pre-wrap;">{{ job.opts | json }}</div>
+        <div><b>Failed Reason</b>:</div>
+        <div style="white-space: pre-wrap;">{{ job.failedReason }}</div>
+        <div><b>Stack Trace</b>:</div>
+        <div style="white-space: pre-wrap;">{{ job.stacktrace | json }}</div>
+    </ng-container>
+</div>

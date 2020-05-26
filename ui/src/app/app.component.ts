@@ -7,11 +7,13 @@ import {
   NbToastrService,
   NbComponentStatus,
   NbGlobalPosition,
-  NbMenuService
+  NbMenuService,
+  NbWindowService
 } from '@nebular/theme';
 import { AppService, Job } from './app.service';
 import { filter, map } from 'rxjs/operators';
 import { ngxLocalStorage } from 'ngx-localstorage';
+import { JobWindowComponent } from './components/job-window/job-window.component';
 
 @Component({
   selector: 'be-root',
@@ -111,6 +113,7 @@ export class AppComponent {
               private sidebarService: NbSidebarService,
               private toastrService: NbToastrService,
               private nbMenuService: NbMenuService,
+              private windowService: NbWindowService,
               private service: AppService) {
       this.dataSource = dataSourceBuilder.create<TableNode>(this.data.map(data => ({ data, expanded: false })));
       this.updateJobCounts();
@@ -196,6 +199,10 @@ export class AppComponent {
     this.loading = true;
     this.service.getJobs(type.toLowerCase(), this.PAGE_SIZE * (page - 1), this.PAGE_SIZE * page)
       .subscribe(jobs => {
+        jobs = jobs.map(job => ({
+          ...job,
+          name: (!job.name || job.name === '__default__') ? job.data.name ?? job.name : job.name
+        }));
         this.data = jobs;
         this.pageNumber = page;
         this.tabs.forEach(tab => {
@@ -234,6 +241,15 @@ export class AppComponent {
       return 'info';
     }
     return 'success';
+  }
+
+  openJobWindow(i: number) {
+    const job = this.data[i];
+    const jobWindowRef = this.windowService.open(JobWindowComponent, {
+      title: this.shownTableHeaderKeys.includes('name') ? job.id : job.name,
+      windowClass: 'job-container',
+      context: job.id
+    });
   }
 }
 

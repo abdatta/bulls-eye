@@ -29,6 +29,13 @@ export class Server {
         .catch(err => res.status(500).send(err));
     });
 
+    app.get('/api/job/:jobId', (req, res) => {
+      const jobId = req.params.jobId;
+      handler.fetchJob(jobId)
+        .then(job => res.send(job))
+        .catch(err => res.status(500).send(err));
+    });
+
     server.listen(config.serverConfig.port, () => {
       console.log('Server listening to', config.serverConfig.port);
     });

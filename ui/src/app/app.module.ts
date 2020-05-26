@@ -17,13 +17,16 @@ import {
   NbTooltipModule,
   NbSpinnerModule,
   NbToastrModule,
-  NbContextMenuModule
+  NbWindowModule,
+  NbContextMenuModule,
+  NbCardModule
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { NgxLocalStorageModule } from 'ngx-localstorage';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
+import { JobWindowComponent } from './components/job-window/job-window.component';
 
 const config: SocketIoConfig = { url: '/', options: {} };
 
@@ -31,7 +34,8 @@ const config: SocketIoConfig = { url: '/', options: {} };
   declarations: [
     AppComponent,
     ProgressBarComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    JobWindowComponent
   ],
   imports: [
     BrowserModule,
@@ -49,10 +53,12 @@ const config: SocketIoConfig = { url: '/', options: {} };
     NbTabsetModule,
     NbTreeGridModule,
     NbContextMenuModule,
+    NbWindowModule.forRoot(),
     NbTooltipModule,
     NbSpinnerModule,
     NbToastrModule.forRoot(),
     NbIconModule,
+    NbCardModule,
     NgxLocalStorageModule.forRoot()
   ],
   providers: [],
