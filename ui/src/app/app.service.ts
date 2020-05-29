@@ -15,7 +15,7 @@ export class AppService {
     this.socket.emit('job-counts', msg);
   }
 
-  getMessage(): Observable<JobCounts> {
+  getJobCounts(): Observable<JobCounts> {
     return this.socket.fromEvent<JobCounts>('job-counts');
   }
 

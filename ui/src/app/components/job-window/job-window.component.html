@@ -1,44 +1,44 @@
-<div *ngIf="job" class="job-container">
+<div *ngIf="loading" [nbSpinner]="loading" class="loader"></div>
+<div *ngIf="!loading" class="job-container">
     <table>
         <tr>
             <td>ID</td>
-            <td>{{ job.id }}</td>
+            <td colspan="3">{{ job.id }}</td>
         </tr>
         <tr>
             <td>Name</td>
-            <td>{{ job.name }}</td>
+            <td colspan="3">{{ job.name }}</td>
         </tr>
         <tr>
             <td>Timestamp</td>
-            <td>{{ job.timestamp | amDateFormat:'lll' }}</td>
+            <td colspan="3">{{ job.timestamp | amDateFormat:'lll' }}</td>
         </tr>
         <tr *ngIf="job.finishedOn">
             <td>Finished On</td>
-            <td>{{ job.finishedOn | amDateFormat:'lll' }}</td>
+            <td colspan="3">{{ job.finishedOn | amDateFormat:'lll' }}</td>
         </tr>
         <tr *ngIf="job.processedOn">
             <td>Processed On</td>
-            <td>{{ job.processedOn | amDateFormat:'lll' }}</td>
+            <td colspan="3">{{ job.processedOn | amDateFormat:'lll' }}</td>
         </tr>
         <tr>
             <td>Attempts Made</td>
             <td>{{ job.attemptsMade | number }}</td>
-        </tr>
-        <tr>
             <td>Delay</td>
             <td>{{ job.delay }}</td>
-        </tr>
-        <tr *ngIf="job.progress">
-            <td>Progress</td>
-            <td><be-progress-bar [value]="job.progress" [status]="getProgressBarStatus(job.progress)"></be-progress-bar></td>
         </tr>
         <tr *ngIf="job.returnvalue != null">
             <td>Return Value</td>
             <td>{{ job.returnvalue }}</td>
         </tr>
+        <tr *ngIf="job.progress">
+            <td colspan="4">
+                <be-progress-bar [value]="job.progress" [status]="getProgressBarStatus(job.progress)"></be-progress-bar>
+            </td>
+        </tr>
     </table>
     <ng-container *ngIf="windowRef.state === 'full-screen'">
-        <nb-card status="default">
+        <nb-card status="success">
             <nb-card-header>Data</nb-card-header>
             <nb-card-body>
                 <code>{{ job.data | json }}</code>
@@ -50,7 +50,7 @@
                 <code>{{ job.opts | json }}</code>
             </nb-card-body>
         </nb-card>
-        <nb-card status="success" *ngIf="job.logs?.logs?.length">
+        <nb-card status="default" *ngIf="job.logs?.logs?.length">
             <nb-card-header>Logs</nb-card-header>
             <nb-card-body>
                 <code *ngFor="let log of job.logs.logs; last as isLast">

@@ -5,6 +5,11 @@
     max-height: calc(100vh - 150px);
 }
 
+.loader {
+    height: 50vh;
+    margin: 0.5rem 0;
+}
+
 ::ng-deep {
     .title {
         flex: unset !important;
@@ -42,13 +47,14 @@ td {
     padding: 0.8rem 1.4rem;
 }
 
-td:nth-child(1) {
+td:nth-child(odd) {
     font-weight: 600;
-    background-color: nb-theme(background-primary-color-1);
+    background-color: nb-theme(color-primary-400);
     color: nb-theme(color-primary-100);
     white-space: nowrap;
 }
 
-td:nth-child(2) {
-    width: 100%;
+td:nth-child(even) {
+    width: 50%;
+    background-color: nb-theme(background-basic-color-1);
 }

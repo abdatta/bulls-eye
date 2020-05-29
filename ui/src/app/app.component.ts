@@ -139,7 +139,7 @@ export class AppComponent {
   }
 
   updateJobCounts() {
-    this.service.getMessage()
+    this.service.getJobCounts()
       .subscribe(data => {
         this.tabs.forEach(tab => {
           const jobType = tab.title.toLowerCase();
