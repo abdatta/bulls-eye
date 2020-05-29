@@ -41,14 +41,12 @@
   "license": "ISC",
   "dependencies": {
     "bull": "^3.13.0",
-    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "minimist": "^1.2.5",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "@types/bull": "^3.12.2",
-    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.6",
     "@types/minimist": "^1.2.0",
     "@types/node": "^13.11.1",

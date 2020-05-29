@@ -4,8 +4,10 @@ import { Server, Socket } from 'socket.io';
 export class QueueHandler {
     private queue: Queue;
     private progressCache: {[id: string]: number} = {};
+    private broadcast: (event: string, ...data: any[]) => boolean;
 
-    constructor(config: QueueConfig, private io: Server) {
+    constructor(config: QueueConfig, io: Server, room: string) {
+        this.broadcast = (event, ...data) => io.in(room).emit(event, ...data);
         this.queue = new bull(config.name, config.options);
         this.setupListeners();
     }
@@ -14,10 +16,10 @@ export class QueueHandler {
         return this.queue.getJobCounts();
     }
 
-    broadcastJobCounts(socket: Socket | Server = this.io) {
+    broadcastJobCounts(socket?: Socket) {
         console.log('Broadcasting job counts');
         this.getJobCounts()
-            .then(jobCounts => socket.emit('job-counts', jobCounts))
+            .then(jobCounts => socket?.emit('job-counts', jobCounts) || this.broadcast('job-counts', jobCounts))
             .catch(err => console.log(err));
     }
 
@@ -37,7 +39,7 @@ export class QueueHandler {
 
         console.log('Broadcasting progress:', progress);
         this.progressCache[jobId] = progress;
-        this.io.emit('progress', {id: jobId, progress});
+        this.broadcast('progress', {id: jobId, progress});
 
         if (this.progressCache[jobId] === 100) delete this.progressCache[jobId];
     }

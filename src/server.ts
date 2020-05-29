@@ -6,45 +6,75 @@ import { QueueHandler, QueueConfig } from './handler';
 import { JobStatus } from 'bull';
 
 export class Server {
-  static start(config: AppConfig) {
+  static start(appConfig: AppConfig) {
     const app = express();
     const server = http.createServer(app);
     const io = socketio(server);
-    const handler = new QueueHandler(config.queueConfigs[0], io);
+
+    const queueHandlers = Object.keys(appConfig.queueConfigs).reduce((handlers, host) => {
+        appConfig.queueConfigs[host]
+            .forEach(config => {
+                const queue = `${host}/${config.name}`;
+                handlers[queue] = new QueueHandler(config, io, queue)
+            });
+        return handlers;
+    }, {} as {[host: string]: QueueHandler});
 
     app.use(express.static(path.join(__dirname, 'public')));
 
     io.on('connection', async client => {
-      console.log('A user connected.');
-      client.on('disconnect', () => console.log('User disconnected.'));
-      handler.broadcastJobCounts(client);
-    })
+        console.log('A user connected.');
 
-    app.get('/api/jobs/:type(completed|waiting|active|delayed|failed|paused)', (req, res) => {
-      const jobType: JobStatus = req.params.type as JobStatus;
-      const start: number = parseInt(req.query.start as string);
-      const end: number = parseInt(req.query.end as string);
-      handler.fetchJobs(jobType, start, end - 1)
-        .then(jobs => res.send(jobs))
-        .catch(err => res.status(500).send(err));
+        client.on('join', (channel: string) => {
+            if (!queueHandlers[channel]) {
+                console.warn('A user tried to join an invalid channel:', channel);
+                return;
+            }
+            client.join(channel);
+            console.log('A user joined channel:', channel);
+            queueHandlers[channel].broadcastJobCounts(client);
+        });
+
+        client.on('disconnect', () => console.log('User disconnected.'));
     });
 
-    app.get('/api/job/:jobId', (req, res) => {
-      const jobId = req.params.jobId;
-      handler.fetchJob(jobId)
-        .then(job => res.send(job))
-        .catch(err => res.status(500).send(err));
+    app.get('/api/jobs/:host/:queue/:type(completed|waiting|active|delayed|failed|paused)', (req, res) => {
+        const queue = `${req.params.host}/${req.params.queue}`;
+        if (!queueHandlers[queue]) {
+            res.sendStatus(404);
+            return;
+        }
+        const jobType: JobStatus = req.params.type as JobStatus;
+        const start: number = parseInt(req.query.start as string);
+        const end: number = parseInt(req.query.end as string);
+        queueHandlers[queue].fetchJobs(jobType, start, end - 1)
+            .then(jobs => res.send(jobs))
+            .catch(err => res.status(500).send(err));
     });
 
-    server.listen(config.serverConfig.port, () => {
-      console.log('Server listening to', config.serverConfig.port);
+    app.get('/api/job/:host/:queue/:jobId', (req, res) => {
+        const queue = `${req.params.host}/${req.params.queue}`;
+        if (!queueHandlers[queue]) {
+            res.sendStatus(404);
+            return;
+        }
+        const jobId = req.params.jobId;
+        queueHandlers[queue].fetchJob(jobId)
+            .then(job => res.send(job))
+            .catch(err => res.status(500).send(err));
+    });
+
+    server.listen(appConfig.serverConfig.port, () => {
+      console.log('Server listening to', appConfig.serverConfig.port);
     });
   }
 }
 
 export interface AppConfig {
-  serverConfig: {
-    port: number;
-  },
-  queueConfigs: QueueConfig[]
+    serverConfig: {
+        port: number;
+    };
+    queueConfigs: {
+          [host: string]: QueueConfig[]
+    };
 }

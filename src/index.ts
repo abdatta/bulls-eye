@@ -2,9 +2,7 @@
 
 import minimist from 'minimist';
 import fs from 'fs';
-import { config } from 'dotenv';
 import { Server } from './server';
-config(); // configuring environment variables
 
 const args = minimist(process.argv.slice(2));
 
