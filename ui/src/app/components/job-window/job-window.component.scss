@@ -38,6 +38,10 @@ table {
     margin-bottom: 1.875rem;
 }
 
+table.maximized {
+    margin-bottom: 0;
+}
+
 table, td {
     border: 1px solid #e4e9f2;
     border-radius: .17rem;
@@ -54,7 +58,7 @@ td:nth-child(odd) {
     white-space: nowrap;
 }
 
-td:nth-child(even) {
+td:nth-child(even), td:last-child {
     width: 50%;
     background-color: nb-theme(background-basic-color-1);
 }

@@ -39,7 +39,7 @@
               </ng-container>
               <ng-template #notProgress>
                 <ng-container *ngIf="column === 'more'; else notMore">
-                  <button nbButton ghost (click)="openJobWindow(i)"><nb-icon icon="external-link"></nb-icon></button>
+                  <button nbButton ghost (click)="openJobWindow(i)"><nb-icon icon="browser-outline"></nb-icon></button>
                 </ng-container>
                 <ng-template #notMore>
                   <ng-container *ngIf="column === 'timestamp' || column === 'finishedOn' || column === 'processedOn'; else notDate">

@@ -1,6 +1,6 @@
 <div *ngIf="loading" [nbSpinner]="loading" class="loader"></div>
 <div *ngIf="!loading" class="job-container">
-    <table>
+    <table [class.maximized]="windowRef.state === 'maximized'">
         <tr>
             <td>ID</td>
             <td colspan="3">{{ job.id }}</td>
@@ -13,20 +13,42 @@
             <td>Timestamp</td>
             <td colspan="3">{{ job.timestamp | amDateFormat:'lll' }}</td>
         </tr>
-        <tr *ngIf="job.finishedOn">
-            <td>Finished On</td>
-            <td colspan="3">{{ job.finishedOn | amDateFormat:'lll' }}</td>
-        </tr>
-        <tr *ngIf="job.processedOn">
-            <td>Processed On</td>
-            <td colspan="3">{{ job.processedOn | amDateFormat:'lll' }}</td>
-        </tr>
-        <tr>
-            <td>Attempts Made</td>
-            <td>{{ job.attemptsMade | number }}</td>
-            <td>Delay</td>
-            <td>{{ job.delay }}</td>
-        </tr>
+        <ng-container *ngIf="windowRef.state === 'full-screen'">
+            <tr *ngIf="job.processedOn || job.finishedOn">
+                <ng-container *ngIf="job.processedOn">
+                    <td>Processed On</td>
+                    <td [attr.colspan]="job.finishedOn ? 1 : 3">{{ job.processedOn | amDateFormat:'lll' }}</td>
+                </ng-container>
+                <ng-container *ngIf="job.finishedOn">
+                    <td>Finished On</td>
+                    <td [attr.colspan]="job.processedOn ? 1 : 3">{{ job.finishedOn | amDateFormat:'lll' }}</td>
+                </ng-container>
+            </tr>
+            <tr>
+                <td>Attempts Made</td>
+                <td>{{ job.attemptsMade | number }}</td>
+                <td>Delay</td>
+                <td>{{ job.delay }}</td>
+            </tr>
+        </ng-container>
+        <ng-container *ngIf="windowRef.state !== 'full-screen'">
+            <tr *ngIf="job.processedOn">
+                <td>Processed On</td>
+                <td colspan="3">{{ job.processedOn | amDateFormat:'lll' }}</td>
+            </tr>
+            <tr *ngIf="job.finishedOn">
+                <td>Finished On</td>
+                <td colspan="3">{{ job.finishedOn | amDateFormat:'lll' }}</td>
+            </tr>
+            <tr>
+                <td>Attempts Made</td>
+                <td colspan="3">{{ job.attemptsMade | number }}</td>
+            </tr>
+            <tr>
+                <td>Delay</td>
+                <td colspan="3">{{ job.delay }}</td>
+            </tr>
+        </ng-container>
         <tr *ngIf="job.returnvalue != null">
             <td>Return Value</td>
             <td>{{ job.returnvalue }}</td>
