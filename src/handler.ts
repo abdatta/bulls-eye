@@ -1,13 +1,10 @@
 import bull, { Queue, JobCounts, JobId, JobStatus, QueueOptions } from 'bull';
-import { Server, Socket } from 'socket.io';
 
 export class QueueHandler {
     private queue: Queue;
     private progressCache: {[id: string]: number} = {};
-    private broadcast: (event: string, ...data: any[]) => boolean;
 
-    constructor(config: QueueConfig, io: Server, room: string) {
-        this.broadcast = (event, ...data) => io.in(room).emit(event, ...data);
+    constructor(config: QueueConfig, private broadcast: (event: string, ...data: any[]) => boolean) {
         this.queue = new bull(config.name, config.options);
         this.setupListeners();
     }
@@ -16,10 +13,10 @@ export class QueueHandler {
         return this.queue.getJobCounts();
     }
 
-    broadcastJobCounts(socket?: Socket) {
+    broadcastJobCounts(broadcast = this.broadcast) {
         console.log('Broadcasting job counts');
         this.getJobCounts()
-            .then(jobCounts => socket?.emit('job-counts', jobCounts) || this.broadcast('job-counts', jobCounts))
+            .then(jobCounts => broadcast('job-counts', jobCounts))
             .catch(err => console.log(err));
     }
 

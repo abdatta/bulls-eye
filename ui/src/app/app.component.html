@@ -6,12 +6,12 @@
   </nb-layout-header>
 
   <nb-sidebar>
-    <nb-menu [items]="items" [autoCollapse]="true">
+    <nb-menu *ngIf="queues" tag="queues" [items]="queues">
     </nb-menu>
   </nb-sidebar>
 
   <nb-layout-column>
-    <nb-tabset fullWidth (changeTab)="fetchJobs($event.tabTitle, 1)">
+    <nb-tabset fullWidth (changeTab)="fetchJobs($event.tabTitle, 1)" [nbSpinner]="loadingJobCounts">
       <nb-tab *ngFor="let tab of tabs"
               [tabTitle]="tab.title"
               [badgeText]="tab.count"

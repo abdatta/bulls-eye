@@ -1,40 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Socket } from 'ngx-socket-io';
-import { Observable } from 'rxjs';
+import { Observable, NEVER } from 'rxjs';
+import { NbMenuItem } from '@nebular/theme';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
 
-  constructor(private socket: Socket,
-              private http: HttpClient) { }
+    private host: string;
+    private queue: string;
 
-  sendMessage(msg: string){
-    this.socket.emit('job-counts', msg);
-  }
+    constructor(private socket: Socket,
+                private http: HttpClient) {
+        this.socket.on('connect', () => this.host && this.queue && this.joinQueue(this.host, this.queue));
+    }
 
-  getJobCounts(): Observable<JobCounts> {
-    return this.socket.fromEvent<JobCounts>('job-counts');
-  }
+    getQueues(): Observable<NbMenuItem[]> {
+        return this.http.get<NbMenuItem[]>(`/api/queues`);
+    }
 
-  getJobs(type: string, start: number, end: number): Observable<Job[]> {
-    return this.http.get<Job[]>('/api/jobs/' + type, {
-      params: {
-        start: start.toString(),
-        end: end.toString()
-      }
-    });
-  }
+    joinQueue(host: string, queue: string): void {
+        this.socket.emit('join', `${host}/${queue}`);
+        this.host = host;
+        this.queue = queue;
+    }
 
-  getJob(jobId: string): Observable<Job> {
-    return this.http.get<Job>('/api/job/' + jobId);
-  }
+    getJobCounts(): Observable<JobCounts> {
+        return this.socket.fromEvent<JobCounts>('job-counts');
+    }
 
-  getProgress(): Observable<{id: string, progress: number}> {
-    return this.socket.fromEvent<{id: string, progress: number}>('progress');
-  }
+    getJobs(type: string, start: number, end: number): Observable<Job[]> {
+        if (!this.host || !this.queue) {
+            return NEVER;
+        }
+        return this.http.get<Job[]>(`/api/jobs/${this.host}/${this.queue}/${type}`, {
+            params: {
+                start: start.toString(),
+                end: end.toString()
+            }
+        });
+    }
+
+    getJob(jobId: string): Observable<Job> {
+        return this.http.get<Job>(`/api/job/${this.host}/${this.queue}/${jobId}`);
+    }
+
+    getProgress(): Observable<{id: string, progress: number}> {
+        return this.socket.fromEvent<{id: string, progress: number}>('progress');
+    }
 }
 
 export interface JobCounts {
@@ -64,4 +79,3 @@ export interface Job {
     count: number;
   };
 }
-

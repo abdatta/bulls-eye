@@ -15,7 +15,7 @@ export class Server {
         appConfig.queueConfigs[host]
             .forEach(config => {
                 const queue = `${host}/${config.name}`;
-                handlers[queue] = new QueueHandler(config, io, queue)
+                handlers[queue] = new QueueHandler(config, (e, ...d) => io.in(queue).emit(e, ...d))
             });
         return handlers;
     }, {} as {[host: string]: QueueHandler});
@@ -32,7 +32,7 @@ export class Server {
             }
             client.join(channel);
             console.log('A user joined channel:', channel);
-            queueHandlers[channel].broadcastJobCounts(client);
+            queueHandlers[channel].broadcastJobCounts((e, ...d) => client.emit(e, ...d));
         });
 
         client.on('disconnect', () => console.log('User disconnected.'));
@@ -63,6 +63,16 @@ export class Server {
             .then(job => res.send(job))
             .catch(err => res.status(500).send(err));
     });
+
+    app.get('/api/queues', (req, res) => {
+        const queues = Object.keys(appConfig.queueConfigs).map(host => ({
+            title: host,
+            children: appConfig.queueConfigs[host].map(queue => ({
+                title: queue.name
+            }))
+        }));
+        res.send(queues);
+    })
 
     server.listen(appConfig.serverConfig.port, () => {
       console.log('Server listening to', appConfig.serverConfig.port);
