@@ -5,7 +5,11 @@ export class QueueHandler {
     private progressCache: {[id: string]: number} = {};
 
     constructor(config: QueueConfig, private broadcast: (event: string, ...data: any[]) => boolean) {
-        this.queue = new bull(config.name, config.options);
+        if (config.url) {
+            this.queue = bull(config.name, config.url, config.options);
+        } else {
+            this.queue = bull(config.name, config.options);
+        }
         this.setupListeners();
     }
 
@@ -17,7 +21,7 @@ export class QueueHandler {
         console.log('Broadcasting job counts');
         this.getJobCounts()
             .then(jobCounts => broadcast('job-counts', jobCounts))
-            .catch(err => console.log(err));
+            .catch(err => console.error(err));
     }
 
     async fetchJob(jobId: string) {
@@ -118,5 +122,6 @@ export class QueueHandler {
 
 export interface QueueConfig {
     name: string;
-    options: QueueOptions
+    url?: string;
+    options?: QueueOptions
 }

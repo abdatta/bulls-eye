@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "concurrently -r \"npm run -s start:src\" \"npm run -s start:ui\"",
-    "start:src": "ts-node-dev --respawn --transpileOnly src -- --config \".conf.json\"",
+    "start:src": "ts-node-dev --respawn --transpileOnly src -- --debug --config \".conf.json\"",
     "start:ui": "cd ui && npm start",
     "build": "rimraf lib && npm run -s build:src && npm run -s build:ui",
     "build:src": "tsc",

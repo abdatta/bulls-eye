@@ -2,8 +2,9 @@ import http from 'http';
 import path from 'path';
 import express from 'express';
 import socketio from 'socket.io';
-import { QueueHandler, QueueConfig } from './handler';
 import { JobStatus } from 'bull';
+import { EventEmitter } from 'events';
+import { QueueHandler, QueueConfig } from './handler';
 
 export class Server {
   static start(appConfig: AppConfig) {
@@ -11,6 +12,7 @@ export class Server {
     const server = http.createServer(app);
     const io = socketio(server);
 
+    EventEmitter.defaultMaxListeners = 15;
     const queueHandlers = Object.keys(appConfig.queueConfigs).reduce((handlers, host) => {
         appConfig.queueConfigs[host]
             .forEach(config => {
@@ -75,7 +77,7 @@ export class Server {
     })
 
     server.listen(appConfig.serverConfig.port, () => {
-      console.log('Server listening to', appConfig.serverConfig.port);
+      console.info('Server listening to', appConfig.serverConfig.port);
     });
   }
 }
