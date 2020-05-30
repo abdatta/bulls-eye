@@ -35,7 +35,10 @@ export class AppService {
         if (!this.host || !this.queue) {
             return NEVER;
         }
-        return this.http.get<Job[]>(`/api/jobs/${this.host}/${this.queue}/${type}`, {
+        const host = encodeURIComponent(this.host);
+        const queue = encodeURIComponent(this.queue);
+        type = encodeURIComponent(type);
+        return this.http.get<Job[]>(`/api/jobs/${host}/${queue}/${type}`, {
             params: {
                 start: start.toString(),
                 end: end.toString()
@@ -44,7 +47,10 @@ export class AppService {
     }
 
     getJob(jobId: string): Observable<Job> {
-        return this.http.get<Job>(`/api/job/${this.host}/${this.queue}/${jobId}`);
+        const host = encodeURIComponent(this.host);
+        const queue = encodeURIComponent(this.queue);
+        jobId = encodeURIComponent(jobId);
+        return this.http.get<Job>(`/api/job/${host}/${queue}/${jobId}`);
     }
 
     getProgress(): Observable<{id: string, progress: number}> {

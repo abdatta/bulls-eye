@@ -112,8 +112,8 @@ export class AppComponent implements OnDestroy {
   async loadQueues() {
     const queues = await this.service.getQueues().toPromise();
     if (queues[0]) {
-        queues[0].expanded = true;
         queues.forEach(queue => {
+            queue.expanded = true;
             queue.icon = 'hard-drive';
             queue.children.forEach(child => child.icon = 'trending-up');
         });
