@@ -12,7 +12,7 @@ if (!args.config) throw new Error('No config file provided. Please provide a con
 
 Server.start({
     serverConfig: {
-        port: parseInt(args.port || '3000')
+        port: parseInt(args.port || '4869')
     },
     queueConfigs: loadQueueConfigs(args.config)
 });
