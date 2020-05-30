@@ -32,6 +32,7 @@ export class Server {
                 console.warn('A user tried to join an invalid channel:', channel);
                 return;
             }
+            client.leaveAll();
             client.join(channel);
             console.log('A user joined channel:', channel);
             queueHandlers[channel].broadcastJobCounts((e, ...d) => client.emit(e, ...d));
