@@ -36,29 +36,32 @@ nb-card-body {
 table {
     border-collapse: collapse;
     margin-bottom: 1.875rem;
+    td {
+        padding: 0.8rem 1.4rem;
+    }
+
+    td:nth-child(odd) {
+        font-weight: 600;
+        background-color: nb-theme(color-primary-400);
+        color: nb-theme(color-primary-100);
+        white-space: nowrap;
+    }
+
+    td:nth-child(even), td:last-child {
+        width: 50%;
+        background-color: nb-theme(background-basic-color-1);
+    }
 }
 
 table.maximized {
     margin-bottom: 0;
+    td:last-child {
+        width: 100%;
+        background-color: nb-theme(background-basic-color-1);
+    }
 }
 
 table, td {
     border: 1px solid #e4e9f2;
     border-radius: .17rem;
-}
-
-td {
-    padding: 0.8rem 1.4rem;
-}
-
-td:nth-child(odd) {
-    font-weight: 600;
-    background-color: nb-theme(color-primary-400);
-    color: nb-theme(color-primary-100);
-    white-space: nowrap;
-}
-
-td:nth-child(even), td:last-child {
-    width: 50%;
-    background-color: nb-theme(background-basic-color-1);
 }
