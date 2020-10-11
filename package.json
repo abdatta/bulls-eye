@@ -1,6 +1,6 @@
 {
   "name": "@abdatta/bulls-eye",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A reactive UI for bull queue management library",
   "main": "lib/index.js",
   "scripts": {
@@ -18,8 +18,7 @@
     "postversion": "git push && git push --tags"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com/"
+    "access": "public"
   },
   "bin": {
     "bulls-eye": "lib/index.js"
