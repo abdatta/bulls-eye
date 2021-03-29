@@ -4,7 +4,7 @@
   "description": "A reactive UI for bull queue management library",
   "main": "lib/index.js",
   "scripts": {
-    "postinstall": "cd ui && npm install",
+    "postinstall": "cd ui && npm install || echo",
     "start": "concurrently -r \"npm run -s start:src\" \"npm run -s start:ui\"",
     "start:src": "ts-node-dev --respawn --transpileOnly src -- --debug --config \".conf.json\"",
     "start:ui": "cd ui && npm start",
