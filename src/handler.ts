@@ -27,11 +27,11 @@ export class QueueHandler {
     async fetchJob(jobId: string) {
         console.log(`fetching job with jobId:${jobId}`);
         const [job, logs] = await Promise.all([this.queue.getJob(jobId), this.queue.getJobLogs(jobId)]);
-        return {...job, progress: job?.progress(), logs};
+        return {...job?.toJSON(), logs};
     }
 
     fetchJobs(jobType: JobStatus, start?: number, end?: number) {
-        console.log(`fetching ${jobType} jobs with start=${start} and end=${end}`)
+        console.log(`fetching ${jobType} jobs with start=${start} and end=${end}`);
         return this.queue.getJobs([jobType], start, end, jobType === 'waiting');
     }
 
