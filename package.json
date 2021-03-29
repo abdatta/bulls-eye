@@ -4,6 +4,7 @@
   "description": "A reactive UI for bull queue management library",
   "main": "lib/index.js",
   "scripts": {
+    "postinstall": "cd ui && npm install",
     "start": "concurrently -r \"npm run -s start:src\" \"npm run -s start:ui\"",
     "start:src": "ts-node-dev --respawn --transpileOnly src -- --debug --config \".conf.json\"",
     "start:ui": "cd ui && npm start",
@@ -40,13 +41,13 @@
   "author": "Abhishek Datta",
   "license": "ISC",
   "dependencies": {
-    "bull": "^3.18.0",
+    "bull": "^3.22.0",
     "express": "^4.17.1",
     "minimist": "^1.2.5",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "@types/bull": "^3.14.4",
+    "@types/bull": "^3.15.0",
     "@types/express": "^4.17.8",
     "@types/minimist": "^1.2.0",
     "@types/node": "^14.11.8",
